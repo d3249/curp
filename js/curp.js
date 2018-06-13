@@ -97,9 +97,9 @@
 		return original.substring(0, index) + replace + original.substring(index + 1);
 	};
 
-    
-    
-    
+
+
+
 	var limpiarAltizonante = function limpiarAltizonante(curp) {
 
 		var palabrasInconvenientes = ['BACA', 'BAKA', 'BUEI', 'BUEY', 'CACA', 'CACO', 'CAGA', 'CAGO', 'COGI', 'COJA', 'COJE', 'COJI', 'COJO', 'COLA', 'CULO', 'FALO', 'FETO', 'GETA', 'GUEI', 'GUEY', 'JETA', 'JOTO', 'KACA', 'KACO', 'KAGA', 'KAGO', 'KAKA', 'KAKO', 'KOGE', 'KOGI', 'KOJA', 'KOJE', 'KOJI', 'KOJO', 'KOLA', 'KULO', 'LILO', 'LOCA', 'LOCO', 'LOKA', 'LOKO', 'MAME', 'MAMO', 'MEAR', 'MEAS', 'MEON', 'MIAR', 'MION', 'MOCO', 'MOKO', 'MULA', 'MULO', 'NACA', 'NACO', 'PEDA', 'PEDO', 'PENE', 'PIPI', 'PITO', 'POPO', 'PUTA', 'PUTO', 'QULO', 'RATA', 'ROBA', 'ROBE', 'ROBO', 'RUIN', 'SENO', 'TETA', 'VACA', 'CAGA', 'VAGO', 'VAKA', 'VUEI', 'VUEY', 'WUEI', 'WUEY'];
@@ -120,7 +120,7 @@
 
 
     var clavesEstados =  {'AGUASCALIENTES':'AS',
-        'MORELOS':'MS', 
+        'MORELOS':'MS',
         'BAJA CALIFORNIA':'BC',
         'NAYARIT':'NT',
         'BAJA CALIFORNIA SUR':'BS',
@@ -128,10 +128,10 @@
         'CAMPECHE':'CC',
         'OAXACA':'OC',
         'COAHUILA':'CL',
-        'PUEBLA':'PL', 
-        'COLIMA':'CM', 
-        'QUERETARO':'QT', 
-        'CHIAPAS':'CS', 
+        'PUEBLA':'PL',
+        'COLIMA':'CM',
+        'QUERETARO':'QT',
+        'CHIAPAS':'CS',
         'QUINTANA ROO':'QR',
         'CHIHUHUA':'CH',
         'SAN LUIS POTOSI':'SP',
@@ -141,17 +141,17 @@
         'SONORA':'SR',
         'GUANAJUATO':'GT',
         'TABASCO':'TC',
-        'GUERRERO':'GR', 
+        'GUERRERO':'GR',
         'TAMAULIPAS':'TS',
         'HIDALGO ':'HG',
         'TLAXCALA':'TL',
-        'JALISCO':'JC', 
+        'JALISCO':'JC',
         'VERACRUZ':'VZ',
         'MEXICO':'MC',
         'YUCATAN':'YN',
         'MICHOACAN':'MN',
         'ZACATECAS':'ZS',
-        'NACIDO EN EL EXTRANJERO':'NE' }; 
+        'NACIDO EN EL EXTRANJERO':'NE' };
 
         return clavesEstados[entidad];
 	};
@@ -164,7 +164,7 @@
 		//primer dígito de verificación v.g. AX = 0X
 		//
 		//Mayo de 2018
-		
+
 		var segRaiz = c.substring(0, 17),
 		    chrCaracter = "0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
 		intFactor = new Array(17),
@@ -198,15 +198,15 @@
 		//Tiene un valor de 0 (cero) si el año de nacimiento es entre 1900 y 1999
 		// y de A entre 2000 y 2099
 		if(ano < 2000){
-		  return '0';	
-		}	
-		
+		  return '0';
+		}
+
 		return 'A';
 	};
 
-	var bccurp = {};
+	var calculaCURP = {};
 
-	bccurp.generar = function generar(nombre, primerApellido, segundoApellido, ano, mes, dia, sexo, entidad) {
+	calculaCURP.generar = function generar(nombre, primerApellido, segundoApellido, ano, mes, dia, sexo, entidad) {
 
 		var curp = '';
 
@@ -247,7 +247,7 @@
 
 		//Primer consonane interna del nombre
 		curp += reemplazarCaracteres(matchOrDefault(nombre, primerConsonanteInternaRgx, 'X'));
-       
+
 		//Consecutivo
 		curp += identificadorDeSiglo(ano);
 
@@ -257,7 +257,7 @@
 		return curp;
 	};
 
-	module.exports = bccurp;
+	module.exports = calculaCURP;
 
 
 })();
