@@ -8,8 +8,6 @@ import static per.d3249.curp.CalculadorDigitoVerificador.calcularDigitoVerificad
 
 public class CURPGenerator {
 
-    public static final String DEFAULT_CHARACTER = "X";
-
     public static String generar(String nombres, String apellidoPaterno, String apellidoMaterno, String ano, String mes,
             String dia, Sexo sexo, Entidad entidad) {
         StringBuilder curpStringBuilder = new StringBuilder();
@@ -21,8 +19,6 @@ public class CURPGenerator {
 
         apellidoPaterno = limpiarApellido(apellidoPaterno);
         apellidoMaterno = limpiarApellido(apellidoMaterno);
-
-        nombres = limpiarNombres(nombres);
 
         // Corregir mes y año en caso de tener un sólo dígito
         mes = corregirLongitud(mes);
@@ -39,6 +35,7 @@ public class CURPGenerator {
 
         // Se hacen las validaciones hasta este punto
         curpStringBuilder = reemplazarCaracteresEspeciales(curpStringBuilder);
+        curpStringBuilder = eliminarPalabrasAltisonantes(curpStringBuilder);
 
         // dos dígitos para el año
         curpStringBuilder.append(ano.substring(2, 4))
@@ -64,25 +61,12 @@ public class CURPGenerator {
         return curpStringBuilder.toString();
     }
 
-    private static String limpiarNombres(String nombres) {
-
-        String[] nombresArray = nombres.split("\\s");
-
-        if (nombresArray.length == 1) {
-            return nombresArray[0];
-        }
-
-        for (String nombre : nombresArray) {
-            if (!Catalogos.LISTA_PRIMEROS_NOMBRES_IGNORADOS.contains(nombre)) {
-                return nombre;
-            }
-        }
-
-        return null;
-
-    }
-
     private static String limpiarApellido(String apellido) {
+
+        if (apellido.isEmpty()) {
+            return apellido;
+        }
+
         if (apellido.charAt(0) == 'Ñ') {
             apellido = apellido.replaceFirst("Ñ", "X");
         }
@@ -121,7 +105,29 @@ public class CURPGenerator {
         palabra = palabra.replaceAll("Ó", "O");
         palabra = palabra.replaceAll("(?:Ú|Ü)", "U");
 
-        return palabra;
+        String[] componentesPalabra = palabra.split("\\s");
+
+        if (componentesPalabra.length == 1) {
+            return componentesPalabra[0];
+        }
+
+        for (String nombre : componentesPalabra) {
+            if (!Catalogos.LISTA_PRIMEROS_NOMBRES_IGNORADOS.contains(nombre)) {
+                return nombre;
+            }
+        }
+
+        return null;
+
+    }
+
+    private static StringBuilder eliminarPalabrasAltisonantes(StringBuilder palabra) {
+
+        if (Catalogos.LISTA_PALABRAS_IMPROPIAS.contains(palabra.toString())) {
+            return palabra.replace(1, 2, ExpresionesRegulares.CARACTER_DEFAULT);
+        } else {
+            return palabra;
+        }
 
     }
 
