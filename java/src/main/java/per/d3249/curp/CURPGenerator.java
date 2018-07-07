@@ -8,6 +8,9 @@ import static per.d3249.curp.CalculadorDigitoVerificador.calcularDigitoVerificad
 
 public class CURPGenerator {
 
+    private CURPGenerator() {
+    };
+
     public static String generar(String nombres, String apellidoPaterno, String apellidoMaterno, String ano, String mes,
             String dia, Sexo sexo, Entidad entidad) {
         StringBuilder curpStringBuilder = new StringBuilder();

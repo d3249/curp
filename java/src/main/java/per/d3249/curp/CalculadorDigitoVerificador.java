@@ -10,6 +10,9 @@ public class CalculadorDigitoVerificador {
     //
     // Mayo de 2018
 
+    private CalculadorDigitoVerificador() {
+    };
+
     public static String calcularDigitoVerificador(String curp) {
         return calcularDigitoVerificador(new StringBuilder(curp));
     }

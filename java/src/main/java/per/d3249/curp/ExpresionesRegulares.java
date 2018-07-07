@@ -12,6 +12,9 @@ public class ExpresionesRegulares {
     private static final Pattern CARACTER_ESPECIAL_PATTERN = Pattern.compile("[^A-ZÑ\\s]");
     public static final String CARACTER_DEFAULT = "X";
 
+    private ExpresionesRegulares() {
+    };
+
     public static String primeraLetra(String palabra) {
         if (palabra.isEmpty()) {
             return CARACTER_DEFAULT;
