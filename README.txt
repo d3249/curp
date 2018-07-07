@@ -8,6 +8,8 @@ El cálculo se hace basado, principalmente, en el documento INSTRUCTIVO NORMATIV
 
 El cálculo del dígito verificador se tomó del archivo javascript del sitio https://consultas.curp.gob.mx/CurpSP/gobmx/inicio.jsp, script CurpSP/gobmx/js/validar/curp.js, específicamente la función calculaDigito.
 
-Actualmente la implemtación se encuentra sólo en javascript, pero espero pronto publicar versiones en Ruby y en Java.
+Actualmente la implemtación se encuentra disponible en javascript y en java.
+
+Espero pronto publicar una versión en Ruby.
 
 
