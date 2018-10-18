@@ -6,10 +6,9 @@ import static per.d3249.curp.ExpresionesRegulares.primeraLetra;
 import static per.d3249.curp.ExpresionesRegulares.primeraVocalInterna;
 import static per.d3249.curp.ExpresionesRegulares.reemplazarCaracteresEspeciales;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class CURPGenerator {
 
 	private static final int MINIMO_VALOR_RANGOS = 1;

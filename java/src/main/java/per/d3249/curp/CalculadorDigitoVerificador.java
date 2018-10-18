@@ -1,9 +1,8 @@
 package per.d3249.curp;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class CalculadorDigitoVerificador {
 
 	// Está función fue tomada del script que se carga en el sitio

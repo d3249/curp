@@ -3,10 +3,9 @@ package per.d3249.curp;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class ExpresionesRegulares {
 
 	private static final Pattern PRIMER_VOCAL_INTERNA_PATTERN = Pattern

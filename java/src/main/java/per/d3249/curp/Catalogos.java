@@ -4,10 +4,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class Catalogos {
 
 	private static final String[] ARRAY_PRIMEROS_NOMBRES_IGNORADOS = { "MARIA", "MA.", "MA", "JOSE", "J", "J.", "DA",
