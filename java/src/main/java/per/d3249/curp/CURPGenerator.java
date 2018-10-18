@@ -1,137 +1,179 @@
 package per.d3249.curp;
 
+import static per.d3249.curp.CalculadorDigitoVerificador.calcularDigitoVerificador;
 import static per.d3249.curp.ExpresionesRegulares.primerConsonanteInterna;
 import static per.d3249.curp.ExpresionesRegulares.primeraLetra;
 import static per.d3249.curp.ExpresionesRegulares.primeraVocalInterna;
 import static per.d3249.curp.ExpresionesRegulares.reemplazarCaracteresEspeciales;
-import static per.d3249.curp.CalculadorDigitoVerificador.calcularDigitoVerificador;
 
 public class CURPGenerator {
 
-    private CURPGenerator() {
-    };
+	private static final int MINIMO_VALOR_RANGOS = 1;
+	private static final int MAXIMO_VALOR_DIA = 31;
+	private static final int MAXIMO_VALOR_MES = 12;
+	private static final String PLANTILLA_ERROR_ELIMINAR_COMPUESTOS = "Error al eliminar elementos compuestos de nombre/apellido [%s]";
+	private static final String PLANTILLA_ERROR_LONGITUD_FECHA = "Longitud inválida para día/mes [%s]";
+	private static final String PLANTILLA_MENSAJE_IDENTIFICADOR = "No se pudo determinar el identificador de siglo [%s]";
 
-    public static String generar(String nombres, String apellidoPaterno, String apellidoMaterno, String ano, String mes,
-            String dia, Sexo sexo, Entidad entidad) {
-        StringBuilder curpStringBuilder = new StringBuilder();
+	private CURPGenerator() {
+	}
 
-        // Convertir todo a mayúsculas
-        nombres = limpiar(nombres);
-        apellidoPaterno = limpiar(apellidoPaterno);
-        apellidoMaterno = limpiar(apellidoMaterno);
+	public static String generar(String nombres, String apellidoPaterno, String apellidoMaterno, String ano, String mes,
+			String dia, Sexo sexo, Entidad entidad) {
 
-        apellidoPaterno = limpiarApellido(apellidoPaterno);
-        apellidoMaterno = limpiarApellido(apellidoMaterno);
+		validarNulos(nombres, apellidoPaterno, apellidoMaterno, ano, mes, dia, sexo, entidad);
 
-        // Corregir mes y año en caso de tener un sólo dígito
-        mes = corregirLongitud(mes);
-        dia = corregirLongitud(dia);
+		StringBuilder curpStringBuilder = new StringBuilder();
 
-        // Letra inicial del primer apellido
-        curpStringBuilder.append(primeraLetra(apellidoPaterno))
-                // primera vocal interna del primer apellido
-                .append(primeraVocalInterna(apellidoPaterno))
-                // primera letra del segundo apellido
-                .append(primeraLetra(apellidoMaterno))
-                // primera letra del nombre
-                .append(primeraLetra(nombres));
+		// Convertir a mayúsculas
+		nombres = limpiar(nombres);
+		apellidoPaterno = limpiar(apellidoPaterno);
+		apellidoMaterno = limpiar(apellidoMaterno);
 
-        // Se hacen las validaciones hasta este punto
-        curpStringBuilder = reemplazarCaracteresEspeciales(curpStringBuilder);
-        curpStringBuilder = eliminarPalabrasAltisonantes(curpStringBuilder);
+		apellidoPaterno = limpiarApellido(apellidoPaterno);
+		apellidoMaterno = limpiarApellido(apellidoMaterno);
 
-        // dos dígitos para el año
-        curpStringBuilder.append(ano.substring(2, 4))
-                // dos dígitos para el mes
-                .append(mes)
-                // dos dígitos para el día
-                .append(dia)
-                // caracter de sexo
-                .append(sexo.CARACTER)
-                // código de entidad
-                .append(entidad.CLAVE)
-                // primera consonante interna del primer apellido
-                .append(primerConsonanteInterna(apellidoPaterno))
-                // primera consonante interna del segundo apellido
-                .append(primerConsonanteInterna(apellidoMaterno))
-                // primera consonante interna del nombre
-                .append(primerConsonanteInterna(nombres))
-                // identificador de siglo
-                .append(identificadorSiglo(ano))
-                // dígito verificador
-                .append(calcularDigitoVerificador(curpStringBuilder));
+		curpStringBuilder.append(primeraLetra(apellidoPaterno)).append(primeraVocalInterna(apellidoPaterno))
+				.append(primeraLetra(apellidoMaterno)).append(primeraLetra(nombres));
 
-        return curpStringBuilder.toString();
-    }
+		curpStringBuilder = reemplazarCaracteresEspeciales(curpStringBuilder);
+		curpStringBuilder = eliminarPalabrasAltisonantes(curpStringBuilder);
 
-    private static String limpiarApellido(String apellido) {
+		// Corrección de longitudes
+		mes = corregirLongitud(mes);
+		dia = corregirLongitud(dia);
 
-        if (apellido.isEmpty()) {
-            return apellido;
-        }
+		validaNumero(ano);
+		validaNumero(mes);
+		validaNumero(dia);
 
-        if (apellido.charAt(0) == 'Ñ') {
-            apellido = apellido.replaceFirst("Ñ", "X");
-        }
-        return apellido;
-    }
+		validarRango(dia, MAXIMO_VALOR_DIA);
+		validarRango(mes, MAXIMO_VALOR_MES);
 
-    private static String identificadorSiglo(String ano) {
-        String siglo = ano.substring(0, 2);
+		//@formatter:off
+		// dos dígitos para el año
+		curpStringBuilder.append(ano.substring(2, 4))
+		.append(mes)
+		.append(dia)
+		.append(sexo.caracter)
+		.append(entidad.clave)
+		.append(primerConsonanteInterna(apellidoPaterno))
+		.append(primerConsonanteInterna(apellidoMaterno))
+		.append(primerConsonanteInterna(nombres))
+		.append(identificadorSiglo(ano))
+		.append(calcularDigitoVerificador(curpStringBuilder));
+		//@formatter:on
 
-        switch (siglo) {
-        case "19":
-            return "0";
-        case "20":
-            return "A";
-        default:
-            return null;
-        }
-    }
+		return curpStringBuilder.toString();
+	}
 
-    private static String corregirLongitud(String valor) {
-        if (valor.length() == 2) {
-            return valor;
-        }
+	private static void validarRango(String valor, int maximo) {
+		int valorNumero = Integer.parseInt(valor);
 
-        return "0" + valor;
-    }
+		if (valorNumero < MINIMO_VALOR_RANGOS || valorNumero > maximo) {
+			throw new CURPGeneratorException(
+					String.format("Valor inválido [%s]. Debe ser entre 1 y %d", valor, maximo));
+		}
+	}
 
-    private static String limpiar(String palabra) {
-        // Se convierte a mayúsculas
-        palabra = palabra.toUpperCase();
+	private static void validarNulos(Object... objects) {
 
-        // Se eliminan acentos y diéresis
-        palabra = palabra.replaceAll("Á", "A");
-        palabra = palabra.replaceAll("É", "E");
-        palabra = palabra.replaceAll("Í", "I");
-        palabra = palabra.replaceAll("Ó", "O");
-        palabra = palabra.replaceAll("(?:Ú|Ü)", "U");
+		for (Object object : objects) {
+			if (object == null) {
+				throw new CURPGeneratorException("Todos los campos son obligatorios");
+			}
+		}
+	}
 
-        String[] componentesPalabra = palabra.split("\\s");
+	private static void validaNumero(String numero) {
+		try {
+			Integer.valueOf(numero);
+		} catch (NumberFormatException e) {
+			throw new CURPGeneratorException(String.format("El valor de día/mes/año debe ser entero [%s]", numero), e);
+		}
 
-        if (componentesPalabra.length == 1) {
-            return componentesPalabra[0];
-        }
+	}
 
-        for (String nombre : componentesPalabra) {
-            if (!Catalogos.LISTA_PRIMEROS_NOMBRES_IGNORADOS.contains(nombre)) {
-                return nombre;
-            }
-        }
+	private static String limpiarApellido(String apellido) {
 
-        return null;
+		if (apellido.isEmpty()) {
+			return apellido;
+		}
 
-    }
+		if (apellido.charAt(0) == 'Ñ') {
+			apellido = apellido.replaceFirst("Ñ", "X");
+		}
+		return apellido;
+	}
 
-    private static StringBuilder eliminarPalabrasAltisonantes(StringBuilder palabra) {
+	private static String identificadorSiglo(String ano) {
+		String siglo = ano.substring(0, 2);
 
-        if (Catalogos.LISTA_PALABRAS_IMPROPIAS.contains(palabra.toString())) {
-            return palabra.replace(1, 2, ExpresionesRegulares.CARACTER_DEFAULT);
-        } else {
-            return palabra;
-        }
+		switch (siglo) {
+		case "19":
+			return "0";
+		case "20":
+			return "A";
+		default:
+			throw new CURPGeneratorException(String.format(PLANTILLA_MENSAJE_IDENTIFICADOR, ano));
+		}
+	}
 
-    }
+	private static String corregirLongitud(String valor) {
+		int longitud = valor.length();
+
+		if (longitud == 2) {
+			return valor;
+		} else if (longitud > 2) {
+			throw new CURPGeneratorException(String.format(PLANTILLA_ERROR_LONGITUD_FECHA, valor));
+		}
+
+		return "0" + valor;
+	}
+
+	private static String limpiar(String palabra) {
+		// Se convierte a mayúsculas
+		String palabraCorregida = palabra.toUpperCase();
+
+		palabraCorregida = reemplazarAcentos(palabraCorregida);
+
+		return eliminarCompuestos(palabraCorregida);
+
+	}
+
+	private static String eliminarCompuestos(String palabra) {
+		String[] componentes = palabra.split("\\s");
+
+		if (componentes.length == 1) {
+			return componentes[0];
+		}
+
+		for (String nombre : componentes) {
+			if (!Catalogos.LISTA_PRIMEROS_NOMBRES_IGNORADOS.contains(nombre)) {
+				return nombre;
+			}
+		}
+		throw new CURPGeneratorException(String.format(PLANTILLA_ERROR_ELIMINAR_COMPUESTOS, palabra));
+
+	}
+
+	private static String reemplazarAcentos(String palabraCorregida) {
+		palabraCorregida = palabraCorregida.replaceAll("Á", "A");
+		palabraCorregida = palabraCorregida.replaceAll("É", "E");
+		palabraCorregida = palabraCorregida.replaceAll("Í", "I");
+		palabraCorregida = palabraCorregida.replaceAll("Ó", "O");
+		palabraCorregida = palabraCorregida.replaceAll("(?:Ú|Ü)", "U");
+		return palabraCorregida;
+	}
+
+	private static StringBuilder eliminarPalabrasAltisonantes(StringBuilder palabra) {
+
+		if (Catalogos.LISTA_PALABRAS_IMPROPIAS.contains(palabra.toString())) {
+			return palabra.replace(1, 2, ExpresionesRegulares.CARACTER_DEFAULT);
+		} else {
+			return palabra;
+		}
+
+	}
 
 }

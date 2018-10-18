@@ -10,10 +10,10 @@ public enum Entidad {
                                             "VZ"), MEXICO("MC"), YUCATAN("YN"), MICHOACAN(
                                                     "MN"), ZACATECAS("ZS"), NACIDO_EN_EL_EXTRANJERO("NE");
 
-    public final String CLAVE;
+    public final String clave;
 
     private Entidad(String clave) {
-        this.CLAVE = clave;
+        this.clave = clave;
     }
 
 }
