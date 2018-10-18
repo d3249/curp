@@ -4,6 +4,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Catalogos {
 
 	private static final String[] ARRAY_PRIMEROS_NOMBRES_IGNORADOS = { "MARIA", "MA.", "MA", "JOSE", "J", "J.", "DA",
@@ -22,8 +26,5 @@ public class Catalogos {
 			.unmodifiableList(Arrays.asList(ARRAY_PRIMEROS_NOMBRES_IGNORADOS));
 	public static final List<String> LISTA_PALABRAS_IMPROPIAS = Collections
 			.unmodifiableList(Arrays.asList(ARRAY_PALABRAS_IMPROPIAS));
-
-	private Catalogos() {
-	}
 
 }

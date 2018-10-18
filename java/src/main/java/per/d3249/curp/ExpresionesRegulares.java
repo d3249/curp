@@ -3,6 +3,10 @@ package per.d3249.curp;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ExpresionesRegulares {
 
 	private static final Pattern PRIMER_VOCAL_INTERNA_PATTERN = Pattern
@@ -11,9 +15,6 @@ public class ExpresionesRegulares {
 			.compile("^.[^B-DF-HJ-NP-TV-ZÑ]*([B-DF-HJ-NP-TV-ZÑ])");
 	private static final Pattern CARACTER_ESPECIAL_PATTERN = Pattern.compile("[^A-ZÑ\\s]");
 	public static final String CARACTER_DEFAULT = "X";
-
-	private ExpresionesRegulares() {
-	}
 
 	public static String primeraLetra(String palabra) {
 		if (palabra.isEmpty()) {

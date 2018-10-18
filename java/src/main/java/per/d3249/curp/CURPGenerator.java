@@ -6,6 +6,10 @@ import static per.d3249.curp.ExpresionesRegulares.primeraLetra;
 import static per.d3249.curp.ExpresionesRegulares.primeraVocalInterna;
 import static per.d3249.curp.ExpresionesRegulares.reemplazarCaracteresEspeciales;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CURPGenerator {
 
 	private static final int MINIMO_VALOR_RANGOS = 1;
@@ -14,9 +18,6 @@ public class CURPGenerator {
 	private static final String PLANTILLA_ERROR_ELIMINAR_COMPUESTOS = "Error al eliminar elementos compuestos de nombre/apellido [%s]";
 	private static final String PLANTILLA_ERROR_LONGITUD_FECHA = "Longitud inválida para día/mes [%s]";
 	private static final String PLANTILLA_MENSAJE_IDENTIFICADOR = "No se pudo determinar el identificador de siglo [%s]";
-
-	private CURPGenerator() {
-	}
 
 	public static String generar(String nombres, String apellidoPaterno, String apellidoMaterno, String ano, String mes,
 			String dia, Sexo sexo, Entidad entidad) {

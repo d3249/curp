@@ -1,5 +1,9 @@
 package per.d3249.curp;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CalculadorDigitoVerificador {
 
 	// Está función fue tomada del script que se carga en el sitio
@@ -9,9 +13,6 @@ public class CalculadorDigitoVerificador {
 	// primer dígito de verificación v.g. AX = 0X
 	//
 	// Mayo de 2018
-
-	private CalculadorDigitoVerificador() {
-	}
 
 	public static String calcularDigitoVerificador(String curp) {
 		return calcularDigitoVerificador(new StringBuilder(curp));
